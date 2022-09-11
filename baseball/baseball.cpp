@@ -10,7 +10,25 @@ using namespace std;
 class cards {
 public:
     static void calculateBestSubset(int n, int W, unordered_map<string,int> cardsMap, int sum) {
+        int profit = 0;
+        if (sum <= W) {
+            for (auto i : cardsMap) {
+                profit += i.second;
+            }
+            cout << "Profit: " << profit << endl;
+            return;
+        }
+        for (int i = 0; i < pow(2, n); i++) {
+            for (int j = 0; j < n; j++) {
+                if (i & (1 << j)) {
+
+                }
+            }
+        }
         
+
+    }
+    static void printOutput() {
 
     }
 
