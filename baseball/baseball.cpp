@@ -2,11 +2,48 @@
 //
 
 #include <iostream>
-using namespace std;
+#include <fstream>
+#include <unordered_map>
+#include <string>
 
-int main()
+using namespace std;
+class cards {
+public:
+
+};
+int main(int argc, char *argv[])
 {
-    cout << "Hello World!\n";
+    int i(0), W(0);
+    unordered_map<string, int> marketMap;
+    // Read marketprice file first
+    ifstream marketRead(argv[2]);
+    marketRead >> i;
+    for (int j = 0; j < i; j++) {
+        string s; int k(0);
+        marketRead >> s >> k;
+        marketMap.insert(make_pair(s, k));
+    }
+    marketRead.close();
+    // Read Gertrude's cards now from pricelist.txt
+    int j(0);
+    ifstream listRead(argv[4]);
+    
+    do {
+        unordered_map<string, int> cardsMap;
+        listRead >> j >> W;
+        for (int k = 0; k < j; k++) {
+            string s; int v(0);
+            listRead >> s >> v;
+            cout << s <<endl;
+            if (marketMap.count(s) == 0) {
+                cout << "No such player in Market"<< endl;
+                return 0;
+            }
+            cardsMap.insert(make_pair(s, v));
+        }
+    } while (!listRead.eof());
+    listRead.close();
+    cout << marketMap["JimRice1975"];
     return 0;
 }
 
