@@ -9,6 +9,10 @@
 using namespace std;
 class cards {
 public:
+    static void calculateBestSubset(int n, int W, unordered_map<string,int> cardsMap, int sum) {
+        
+
+    }
 
 };
 int main(int argc, char *argv[])
@@ -31,16 +35,20 @@ int main(int argc, char *argv[])
     do {
         unordered_map<string, int> cardsMap;
         listRead >> j >> W;
+        int sum(0), profit(0);
         for (int k = 0; k < j; k++) {
             string s; int v(0);
             listRead >> s >> v;
             cout << s <<endl;
+            sum += v;
+            profit = marketMap[s] - v;
             if (marketMap.count(s) == 0) {
                 cout << "No such player in Market"<< endl;
                 return 0;
             }
-            cardsMap.insert(make_pair(s, v));
+            cardsMap.insert(make_pair(s, profit));
         }
+        cards::calculateBestSubset(j, W, cardsMap, sum);
     } while (!listRead.eof());
     listRead.close();
     cout << marketMap["JimRice1975"];
