@@ -9,24 +9,26 @@
 using namespace std;
 class cards {
 public:
-    static void calculateBestSubset(int n, int W, unordered_map<string,int> cardsMap, int sum) {
-        int profit = 0;
+    static void calculateBestSubset(int n, int W, vector<pair<string,int>> cardsVec, int sum, int profit, unordered_map<string,int> marketMap) {
+        int maxProfit(0);
         if (sum <= W) {
-            for (auto i : cardsMap) {
-                profit += i.second;
-            }
             cout << "Profit: " << profit << endl;
             return;
         }
         for (int i = 0; i < pow(2, n); i++) {
             for (int j = 0; j < n; j++) {
                 if (i & (1 << j)) {
-
+                    //sum += cardsVec[j];
+                }
+            }
+            if (sum <= W) {
+                if (profit > maxProfit) {
+                    maxProfit = profit;
                 }
             }
         }
+        printOutput();
         
-
     }
     static void printOutput() {
 
@@ -36,7 +38,7 @@ public:
 int main(int argc, char *argv[])
 {
     int i(0), W(0);
-    unordered_map<string, int> marketMap;
+    unordered_map<string,int> marketMap;
     // Read marketprice file first
     ifstream marketRead(argv[2]);
     marketRead >> i;
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
     ifstream listRead(argv[4]);
     
     do {
-        unordered_map<string, int> cardsMap;
+        vector<pair<string,int>> cardsVec;
         listRead >> j >> W;
         int sum(0), profit(0);
         for (int k = 0; k < j; k++) {
@@ -59,17 +61,16 @@ int main(int argc, char *argv[])
             listRead >> s >> v;
             cout << s <<endl;
             sum += v;
-            profit = marketMap[s] - v;
+            profit += marketMap[s] - v;
             if (marketMap.count(s) == 0) {
                 cout << "No such player in Market"<< endl;
                 return 0;
             }
-            cardsMap.insert(make_pair(s, profit));
+            cardsVec.push_back(make_pair(s, v));
         }
-        cards::calculateBestSubset(j, W, cardsMap, sum);
+        cards::calculateBestSubset(j, W, cardsVec, sum, profit, marketMap);
     } while (!listRead.eof());
     listRead.close();
-    cout << marketMap["JimRice1975"];
     return 0;
 }
 
