@@ -16,14 +16,19 @@ public:
             return;
         }
         for (int i = 0; i < pow(2, n); i++) {
+            int s = 0;
+            int p = 0;
             for (int j = 0; j < n; j++) {
                 if (i & (1 << j)) {
-                    //sum += cardsVec[j];
+                    string str = cardsVec.at(j).first;
+                    s += cardsVec.at(j).second;
+                    p += marketMap[str] - s;
+
                 }
             }
-            if (sum <= W) {
-                if (profit > maxProfit) {
-                    maxProfit = profit;
+            if (s <= W) {
+                if (p > maxProfit) {
+                    maxProfit = p;
                 }
             }
         }
