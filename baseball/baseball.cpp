@@ -7,36 +7,59 @@
 #include <string>
 
 using namespace std;
+int temp = 0;
 class cards {
 public:
-    static void calculateBestSubset(int n, int W, vector<pair<string,int>> cardsVec, int sum, int profit, unordered_map<string,int> marketMap) {
+    static void calculateBestSubset(int n, int W, vector<pair<string,int>> cardsVec, int sum, int profit, unordered_map<string,int> marketMap,
+        ofstream &f) {
         int maxProfit(0);
+        vector<string> M;
+        // if weight is more or equal to sum of all cards, buy them all
         if (sum <= W) {
-            cout << "Profit: " << profit << endl;
+            for (int i = 0; i < cardsVec.size(); i++) {
+                M.push_back(cardsVec.at(i).first);
+            }
+            printOutput(n, profit, M, f);
+
             return;
         }
+        // amount of subsets would be 2 to the power of n
         for (int i = 0; i < pow(2, n); i++) {
             int s = 0;
             int p = 0;
+            vector<string> vec;
+            
             for (int j = 0; j < n; j++) {
                 if (i & (1 << j)) {
                     string str = cardsVec.at(j).first;
                     s += cardsVec.at(j).second;
                     p += marketMap[str] - s;
-
+                    vec.push_back(str);
                 }
             }
+            // check if not going above given weight and change maxprofit if suffices condition
             if (s <= W) {
                 if (p > maxProfit) {
                     maxProfit = p;
+                    // clear if already filled
+                    if (M.size() > 0) {
+                        M.clear();
+                    }
+                    for (int i = 0; i < vec.size(); i++) {
+                        M.push_back(vec[i]);
+                    }
                 }
             }
         }
-        printOutput();
+        printOutput(n, maxProfit, M, f);
         
     }
-    static void printOutput() {
-
+    static void printOutput(int n, int maxProfit, vector<string> M, ofstream &f) {
+        f << endl;
+        f << n << endl << maxProfit << endl << M.size() << endl;
+        for (int i = 0; i < M.size(); i++) {
+            f << M[i] << endl;
+        }
     }
 
 };
@@ -56,7 +79,7 @@ int main(int argc, char *argv[])
     // Read Gertrude's cards now from pricelist.txt
     int j(0);
     ifstream listRead(argv[4]);
-    
+    ofstream f("output.txt");
     do {
         vector<pair<string,int>> cardsVec;
         listRead >> j >> W;
@@ -73,9 +96,10 @@ int main(int argc, char *argv[])
             }
             cardsVec.push_back(make_pair(s, v));
         }
-        cards::calculateBestSubset(j, W, cardsVec, sum, profit, marketMap);
+        cards::calculateBestSubset(j, W, cardsVec, sum, profit, marketMap, f);
     } while (!listRead.eof());
     listRead.close();
+    f.close();
     return 0;
 }
 
