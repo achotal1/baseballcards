@@ -5,10 +5,8 @@
 #include <fstream>
 #include <unordered_map>
 #include <string>
-#include <math.h>
-
 using namespace std;
-int temp = 0;
+
 class cards {
 public:
     static void calculateBestSubset(int n, int W, vector<pair<string,int>> cardsVec, int sum, int profit, unordered_map<string,int> marketMap,
@@ -56,8 +54,9 @@ public:
         printOutput(n, maxProfit, M, f);
         
     }
+    // Print the output to a text file
     static void printOutput(int n, int maxProfit, vector<string> M, ofstream &f) {
-        f << "hello"<<endl;
+        f << endl;
         f << n << endl << maxProfit << endl << M.size() << endl;
         for (int i = 0; i < M.size(); i++) {
             f << M[i] << endl;
@@ -83,6 +82,7 @@ int main(int argc, char *argv[])
     int j(0);
     ifstream listRead(argv[4]);
     ofstream f("output.txt");
+    // Run till we have enough cases in pricelist
     do {
         vector<pair<string,int>> cardsVec;
         listRead >> j >> W;
@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
             listRead >> s >> v;
             sum += v;
             profit += marketMap[s] - v;
+            // If there is no such player in the market, end the program
             if (marketMap.count(s) == 0) {
                 cout << "No such player in Market"<< endl;
                 return 0;
@@ -100,18 +101,9 @@ int main(int argc, char *argv[])
         }
         cards::calculateBestSubset(j, W, cardsVec, sum, profit, marketMap, f);
     } while (!listRead.eof());
+    // Close files
     listRead.close();
     f.close();
     return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
