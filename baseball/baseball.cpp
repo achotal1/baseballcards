@@ -5,6 +5,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <string>
+#include <math.h>
 
 using namespace std;
 int temp = 0;
@@ -14,6 +15,7 @@ public:
         ofstream &f) {
         int maxProfit(0);
         vector<string> M;
+        int power = pow(2, n);
         // if weight is more or equal to sum of all cards, buy them all
         if (sum <= W) {
             for (int i = 0; i < cardsVec.size(); i++) {
@@ -24,42 +26,43 @@ public:
             return;
         }
         // amount of subsets would be 2 to the power of n
-        for (int i = 0; i < pow(2, n); i++) {
+        for (int i = 0; i < power; i++) {
             int s = 0;
             int p = 0;
             vector<string> vec;
             
             for (int j = 0; j < n; j++) {
-                if (i & (1 << j)) {
+                if ((i & (1 << j))>0) {
                     string str = cardsVec.at(j).first;
-                    s += cardsVec.at(j).second;
-                    p += marketMap[str] - s;
+                    int second = cardsVec.at(j).second;
+                    s += second;
+                    p += marketMap[str] - second;
                     vec.push_back(str);
                 }
             }
             // check if not going above given weight and change maxprofit if suffices condition
-            if (s <= W) {
-                if (p > maxProfit) {
-                    maxProfit = p;
-                    // clear if already filled
-                    if (M.size() > 0) {
-                        M.clear();
-                    }
-                    for (int i = 0; i < vec.size(); i++) {
-                        M.push_back(vec[i]);
-                    }
+            if (s <= W && p >= maxProfit) {
+                maxProfit = p;
+                // clear if already filled
+                if (M.size() > 0) {
+                    M.clear();
                 }
+                cout << endl;
+                for (int i = 0; i < vec.size(); i++) {
+                    M.push_back(vec[i]);
+                } 
             }
         }
         printOutput(n, maxProfit, M, f);
         
     }
     static void printOutput(int n, int maxProfit, vector<string> M, ofstream &f) {
-        f << endl;
+        f << "hello"<<endl;
         f << n << endl << maxProfit << endl << M.size() << endl;
         for (int i = 0; i < M.size(); i++) {
             f << M[i] << endl;
         }
+        return;
     }
 
 };
@@ -87,7 +90,6 @@ int main(int argc, char *argv[])
         for (int k = 0; k < j; k++) {
             string s; int v(0);
             listRead >> s >> v;
-            cout << s <<endl;
             sum += v;
             profit += marketMap[s] - v;
             if (marketMap.count(s) == 0) {
